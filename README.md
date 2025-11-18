@@ -1,4 +1,4 @@
-Particle Life Simulator
+# Particle Life Simulator
 
 Project Idea
 
