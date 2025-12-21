@@ -28,8 +28,7 @@ class ParticleSystem:
         # Wandelt übergebene Partikel in Liste um, falls vorhanden
         self.particles: List[Particle] = list(particles) if particles else []
         self.rules = rules
- 
-    
+
     @classmethod
     def random_system(cls, n=200, num_types=4, width=800, height=600):
         """
@@ -76,8 +75,8 @@ class ParticleSystem:
         """
         Führt den gesamten Integrationsschritt aus.
         Ablauf:
-        1. forces -> in numpy Array 
-        2. Kraft in Beschleunigung umrechnen 
+        1. forces -> in numpy Array
+        2. Kraft in Beschleunigung umrechnen
         3. Beschleunigung auf v anwenden
         4. Jedes Partikel führt sein eigenes integrate(dt) aus
            -> beinhaltet: Reibung, Noise & Positionsänderung
@@ -88,7 +87,9 @@ class ParticleSystem:
         # Kräfte in ndarray umwandeln
         forces_arr = np.asarray(forces, dtype=float)
         if forces_arr.shape != (len(self.particles), 2):
-            raise ValueError("forces must be shape (N,2) where N == number of particles")
+            raise ValueError(
+                "forces must be shape (N,2) where N == number of particles"
+            )
 
         # 1. Physikschritt: Beschleunigung -> Geschwindigkeit
         for i, p in enumerate(self.particles):
@@ -104,7 +105,7 @@ class ParticleSystem:
         self,
         xlim: Tuple[float, float] = (0.0, 500.0),
         ylim: Tuple[float, float] = (0.0, 500.0),
-        mode: str = "clip"
+        mode: str = "clip",
     ) -> None:
         """
         Wendet Randbedingungen an:
@@ -151,7 +152,9 @@ class ParticleSystem:
                     p.velocity[1] = -p.velocity[1]
 
             else:
-                raise ValueError("Unknown boundary mode: choose 'clip', 'wrap', or 'reflect'")
+                raise ValueError(
+                    "Unknown boundary mode: choose 'clip', 'wrap', or 'reflect'"
+                )
 
     # Getter für Renderer
     def get_positions(self) -> np.ndarray:
