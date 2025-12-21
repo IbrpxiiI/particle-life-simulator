@@ -19,22 +19,17 @@ def test_integrate_applies_forces_and_moves():
     # Partikelsystem mit genau zwei Partikeln
     system = ParticleSystem([p1, p2])
 
-    forces = np.array([
-        [1.0, 0.0],   # Kraft auf p1
-        [-1.0, 0.0]   # Kraft auf p2
-    ])
+    forces = np.array([[1.0, 0.0], [-1.0, 0.0]])  # Kraft auf p1  # Kraft auf p2
 
     # System für eine Zeiteinheit (dt = 1.0) integrieren
     system.integrate(forces, dt=1.0)
 
-    
     # Erwartete neue Geschwindigkeiten:
     # p1: alte v 0.5  + Beschl. 0.5  = 1.0, p2: alte v 0.0  + Beschl. -0.5 = -0.5
     assert np.allclose(p1.velocity[0], 1.0)
     assert np.allclose(p2.velocity[0], -0.5)
 
-    
-    # Erwartete neue Positionen (dt = 1.0): 
+    # Erwartete neue Positionen (dt = 1.0):
     # p1: 1.0 + 1.0   = 2.0,  p2: 0.0 + (-0.5) = -0.5
     assert np.allclose(p1.position[0], 2.0)
     assert np.allclose(p2.position[0], -0.5)
@@ -57,9 +52,7 @@ def test_apply_boundary_clip():
 
     # Grenzen: 0 bis 500 in X und Y
     system.apply_boundary(
-        xlim=(0.0, 500.0),
-        ylim=(0.0, 500.0),
-        mode="clip"   # harte Begrenzung
+        xlim=(0.0, 500.0), ylim=(0.0, 500.0), mode="clip"  # harte Begrenzung
     )
 
     assert 0.0 <= p.position[0] <= 500.0

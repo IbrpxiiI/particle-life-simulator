@@ -33,7 +33,7 @@ class ParticleSystem:
         # Wandelt übergebene Partikel in Liste um, falls vorhanden
         self.particles: List[Particle] = list(particles) if particles else []
         self.rules = rules
- 
+
     # Zufälliges Test System erzeugen
     @classmethod
     def random_system(cls, n=200, num_types=4, width=800, height=600):
@@ -50,15 +50,15 @@ class ParticleSystem:
         ]
 
         return cls(particles, default_rules(num_types))
-    
+
     # Kern: OPTIMIERTE INTEGRATION
 
     def integrate(self, forces, dt: float = 1.0) -> None:
         """
         Führt den gesamten Integrationsschritt aus.
         Ablauf:
-        1. forces -> in numpy Array 
-        2. Kraft in Beschleunigung umrechnen 
+        1. forces -> in numpy Array
+        2. Kraft in Beschleunigung umrechnen
         3. Beschleunigung auf v anwenden
         4. Jedes Partikel führt sein eigenes integrate(dt) aus
            -> beinhaltet: Reibung, Noise & Positionsänderung
@@ -86,14 +86,14 @@ class ParticleSystem:
         for p, v in zip(self.particles, velocities):
             p.velocity = v
             p.integrate(dt)
-    
+
     # OPTIMIERTE RANDVERARBEITUNG
 
     def apply_boundary(
         self,
         xlim: Tuple[float, float] = (0.0, 500.0),
         ylim: Tuple[float, float] = (0.0, 500.0),
-        mode: str = "clip"
+        mode: str = "clip",
     ) -> None:
         """
         Wendet Randbedingungen an:
@@ -123,23 +123,21 @@ class ParticleSystem:
             positions[:, 1] = np.clip(positions[:, 1], ymin, ymax)
 
         elif mode == "wrap":
-           width = xmax - xmin
-           height = ymax - ymin
-           positions[:, 0] = xmin + (positions[:, 0] - xmin) % width
-           positions[:, 1] = ymin + (positions[:, 1] - ymin) % height
-
-
+            width = xmax - xmin
+            height = ymax - ymin
+            positions[:, 0] = xmin + (positions[:, 0] - xmin) % width
+            positions[:, 1] = ymin + (positions[:, 1] - ymin) % height
 
         elif mode == "reflect":
-           # Masken für Kollisionen 
-           mask_x = (positions[:, 0] < xmin) | (positions[:, 0] > xmax)
-           mask_y = (positions[:, 1] < ymin) | (positions[:, 1] > ymax)
+            # Masken für Kollisionen
+            mask_x = (positions[:, 0] < xmin) | (positions[:, 0] > xmax)
+            mask_y = (positions[:, 1] < ymin) | (positions[:, 1] > ymax)
 
-           velocities[mask_x, 0] *= -1
-           velocities[mask_y, 1] *= -1
+            velocities[mask_x, 0] *= -1
+            velocities[mask_y, 1] *= -1
 
-           positions[:, 0] = np.clip(positions[:, 0], xmin, xmax)
-           positions[:, 1] = np.clip(positions[:, 1], ymin, ymax)
+            positions[:, 0] = np.clip(positions[:, 0], xmin, xmax)
+            positions[:, 1] = np.clip(positions[:, 1], ymin, ymax)
 
         else:
             raise ValueError("Unbekannter Modus: clip, wrap oder reflect")

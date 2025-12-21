@@ -78,10 +78,10 @@ class PygameRenderer:
         Default mapping: type -> RGB color.
         """
         return {
-            0: (255, 80, 80),    # red-ish
-            1: (80, 255, 80),    # green-ish
-            2: (80, 80, 255),    # blue-ish
-            3: (255, 255, 80),   # yellow-ish
+            0: (255, 80, 80),  # red-ish
+            1: (80, 255, 80),  # green-ish
+            2: (80, 80, 255),  # blue-ish
+            3: (255, 255, 80),  # yellow-ish
         }
 
     def type_to_color(self, particle_type: int) -> Color:
@@ -101,7 +101,9 @@ class PygameRenderer:
         positions = self.system.get_positions()
         types = self.system.get_types()
 
-        positions = np.atleast_2d(positions)  # sicherstellen, dass pos[0]/pos[1] funktioniert
+        positions = np.atleast_2d(
+            positions
+        )  # sicherstellen, dass pos[0]/pos[1] funktioniert
 
         for pos, t in zip(positions, types):
             x = int(pos[0])
