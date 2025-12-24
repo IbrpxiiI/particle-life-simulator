@@ -37,7 +37,7 @@ class Particle:
         Zufälliges Rauschen, das Bewegung etwas unvorhersehbar macht
 
     color : Tuple[int, int, int] | None
-        RGB Farbe für die Visualisierung 
+        RGB Farbe für die Visualisierung
     """
 
     def __init__(
@@ -91,11 +91,11 @@ class Particle:
         3. Position aktualisieren -> position += v * dt
         """
 
-        # 1. Reibung anwenden 
+        # 1. Reibung anwenden
         if self.friction != 0.0:
             self.velocity = self.velocity * (1.0 - float(self.friction))
 
-        # 2. Zufälliges Rauschen hinzufügen 
+        # 2. Zufälliges Rauschen hinzufügen
         if self.noise > 0.0:
             self.velocity += np.random.randn(2) * float(self.noise)
 

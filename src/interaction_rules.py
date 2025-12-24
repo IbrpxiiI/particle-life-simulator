@@ -84,7 +84,9 @@ class InteractionRules:
                     f_j = core_factor * direction * self.global_strength
                 else:
                     # linear abfallende Stärke
-                    factor = 1.0 - (dist - self.min_range) / (self.max_range - self.min_range)
+                    factor = 1.0 - (dist - self.min_range) / (
+                        self.max_range - self.min_range
+                    )
                     f_i = strength_ij * factor * direction * self.global_strength
                     f_j = -strength_ji * factor * direction * self.global_strength
 
@@ -102,9 +104,9 @@ def default_rules(num_types=4):
 
     if num_types == 4:
         matrix = [
-            [0.6, -0.8,  0.3, -0.2],
-            [-0.5, 0.6, -0.7,  0.1],
-            [0.2, -0.4,  0.6, -0.6],
+            [0.6, -0.8, 0.3, -0.2],
+            [-0.5, 0.6, -0.7, 0.1],
+            [0.2, -0.4, 0.6, -0.6],
             [-0.3, 0.1, -0.5, 0.6],
         ]
     else:

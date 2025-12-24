@@ -49,8 +49,14 @@ class DummyRenderer:
 
 def create_simple_system() -> ParticleSystem:
     """One particle with non-zero velocity."""
-    p = Particle(position=(0.0, 0.0), velocity=(1.0, 0.0), particle_type=0,
-                 mass=1.0, friction=0.0, noise=0.0)
+    p = Particle(
+        position=(0.0, 0.0),
+        velocity=(1.0, 0.0),
+        particle_type=0,
+        mass=1.0,
+        friction=0.0,
+        noise=0.0,
+    )
     return ParticleSystem(particles=[p])
 
 
