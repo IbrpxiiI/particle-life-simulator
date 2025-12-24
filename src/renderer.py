@@ -4,6 +4,7 @@ from __future__ import annotations
 from typing import Dict, Tuple, Optional
 
 import numpy as np
+
 # pygame OPTIONAL importieren (CI-safe)
 try:
     import pygame
