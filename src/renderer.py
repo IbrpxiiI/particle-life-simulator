@@ -4,7 +4,12 @@ from __future__ import annotations
 from typing import Dict, Tuple, Optional
 
 import numpy as np
-import pygame
+# pygame OPTIONAL importieren (CI-safe)
+try:
+    import pygame
+except ImportError:
+    pygame = None
+
 from src.particle_system import ParticleSystem
 
 Color = Tuple[int, int, int]
@@ -53,6 +58,12 @@ class PygameRenderer:
         show_fps: bool = True,
         color_map: Optional[Dict[int, Color]] = None,
     ):
+        if pygame is None:
+            raise RuntimeError(
+                "pygame ist nicht installiert. "
+                "PygameRenderer kann ohne pygame nicht verwendet werden."
+            )
+
         self.system = system
         self.width = int(width)
         self.height = int(height)
