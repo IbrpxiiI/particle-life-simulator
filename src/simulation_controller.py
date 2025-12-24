@@ -69,7 +69,6 @@ class SimulationController:
         """Handle pygame events (quit, keyboard)."""
         if pygame is None:
             return
-        
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -121,7 +120,6 @@ class SimulationController:
             if hasattr(self.renderer, "tick"):
                 dt = self.renderer.tick(self.target_fps)
 
-
             self.handle_events()
             self.step_simulation(dt)
 
@@ -133,9 +131,10 @@ class SimulationController:
 
             step += 1
 
-        
         if pygame is not None:
             pygame.quit()
+
+
 # ----------------------------------------------------------------------
 # Helper functions to create a default setup and run the simulation
 # ----------------------------------------------------------------------
