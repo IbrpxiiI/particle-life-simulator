@@ -4,12 +4,20 @@ from __future__ import annotations
 from typing import List, Tuple
 
 import numpy as np
-import pygame
+
+# pygame OPTIONAL importieren (CI-safe)
+try:
+    import pygame
+except ImportError:
+    pygame = None
+
 
 from src.particle import Particle
 from src.particle_system import ParticleSystem
 from src.interaction_rules import InteractionRules, default_rules
 from src.renderer import PygameRenderer, ConsoleRenderer
+
+RendererType = Union[PygameRenderer, ConsoleRenderer]
 
 
 class SimulationController:
@@ -59,6 +67,10 @@ class SimulationController:
     # ------------------------------------------------------------------
     def handle_events(self) -> None:
         """Handle pygame events (quit, keyboard)."""
+        if pygame is None:
+            return
+        
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
@@ -105,18 +117,25 @@ class SimulationController:
         """Main loop of the simulation."""
         step = 0
         while self.running:
-            dt = self.renderer.tick(self.target_fps)
+            dt = 0.0
+            if hasattr(self.renderer, "tick"):
+                dt = self.renderer.tick(self.target_fps)
+
+
             self.handle_events()
             self.step_simulation(dt)
 
-            fps = self.renderer.get_fps()
-            self.renderer.render(fps=fps)
+            if hasattr(self.renderer, "get_fps"):
+                fps = self.renderer.get_fps()
+                self.renderer.render(fps=fps)
+            else:
+                self.renderer.render(step)
 
             step += 1
 
-        pygame.quit()
-
-
+        
+        if pygame is not None:
+            pygame.quit()
 # ----------------------------------------------------------------------
 # Helper functions to create a default setup and run the simulation
 # ----------------------------------------------------------------------
