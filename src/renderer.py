@@ -72,12 +72,17 @@ class PygameRenderer:
         self.particle_radius = int(particle_radius)
         self.show_fps = bool(show_fps)
 
-        pygame.init()
-        self.screen = pygame.display.set_mode((self.width, self.height))
-        pygame.display.set_caption("Particle Life")
+        if pygame is not None:
+            pygame.init()
+            self.screen = pygame.display.set_mode((self.width, self.height))
+            pygame.display.set_caption("Particle Life")
 
-        self.clock = pygame.time.Clock()
-        self.font = pygame.font.SysFont("consolas", 16)
+            self.clock = pygame.time.Clock()
+            self.font = pygame.font.SysFont("consolas", 16)
+        else:
+            self.screen = None
+            self.clock = None
+            self.font = None
 
         if color_map is None:
             self.color_map = self._create_default_color_map()
