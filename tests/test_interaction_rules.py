@@ -5,7 +5,7 @@ import sys
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
-    
+
 import numpy as np
 
 from src.interaction_rules import InteractionRules, default_rules
@@ -33,19 +33,18 @@ class FakeSystem:
 def test_forces_shape_and_type_range():
     """compute_forces gibt ein (N,2)-Array zurück und prüft Typenbereich."""
     # zwei Partikel in 10 Einheiten Abstand
-    system = FakeSystem(positions=[(0.0, 0.0), (10.0, 0.0)],
-                        types=[0, 1])
+    system = FakeSystem(positions=[(0.0, 0.0), (10.0, 0.0)], types=[0, 1])
 
-    matrix = np.array([[0.5, -1.0],
-                       [-1.0, 0.5]])
+    matrix = np.array([[0.5, -1.0], [-1.0, 0.5]])
     rules = InteractionRules(matrix, min_range=5.0, max_range=50.0, global_strength=1.0)
 
     forces = rules.compute_forces(system)
     assert forces.shape == (2, 2)
 
     # Typ außerhalb des erlaubten Bereichs -> Fehler
-    bad_system = FakeSystem(positions=[(0.0, 0.0), (10.0, 0.0)],
-                            types=[0, 3])  # Typ 3 existiert nicht in 2x2-Matrix
+    bad_system = FakeSystem(
+        positions=[(0.0, 0.0), (10.0, 0.0)], types=[0, 3]
+    )  # Typ 3 existiert nicht in 2x2-Matrix
     try:
         rules.compute_forces(bad_system)
         assert False, "Es hätte ein ValueError geworfen werden müssen."
@@ -55,8 +54,7 @@ def test_forces_shape_and_type_range():
 
 def test_cutoff_zero_force_outside_range():
     """Für Distanzen > max_range soll keine Kraft mehr wirken."""
-    system = FakeSystem(positions=[(0.0, 0.0), (200.0, 0.0)],
-                        types=[0, 1])
+    system = FakeSystem(positions=[(0.0, 0.0), (200.0, 0.0)], types=[0, 1])
 
     matrix = np.ones((2, 2))
     rules = InteractionRules(matrix, min_range=5.0, max_range=50.0, global_strength=1.0)
@@ -68,8 +66,7 @@ def test_cutoff_zero_force_outside_range():
 def test_core_repulsion_at_small_distance():
     """Unterhalb min_range soll eine Abstoßung auftreten, auch wenn Matrix 0 ist."""
     # Partikel sehr nah beieinander
-    system = FakeSystem(positions=[(0.0, 0.0), (1.0, 0.0)],
-                        types=[0, 1])
+    system = FakeSystem(positions=[(0.0, 0.0), (1.0, 0.0)], types=[0, 1])
 
     # Matrix sagt eigentlich: keine Interaktion
     matrix = np.zeros((2, 2))

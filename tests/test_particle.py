@@ -1,18 +1,19 @@
 # tests/test_particle.py
-import numpy as np                      
-from src.particle import Particle       
+import numpy as np
+from src.particle import Particle
+
 
 def test_particle_initialization():
     """
     Testet, ob ein Partikel nach der Erstellung alle Attribute korrekt speichert
     """
     p = Particle(
-        position=(1.0, 2.0),            # Startposition X=1, Y=2
-        velocity=(0.5, -0.5),           # Anfangsgeschwindigkeit (r, l)
-        particle_type=2,                
-        mass=2.0,                       
-        friction=0.1,                   # Reibungswert = 0.1
-        noise=0.0                       # Kein Rauschen
+        position=(1.0, 2.0),  # Startposition X=1, Y=2
+        velocity=(0.5, -0.5),  # Anfangsgeschwindigkeit (r, l)
+        particle_type=2,
+        mass=2.0,
+        friction=0.1,  # Reibungswert = 0.1
+        noise=0.0,  # Kein Rauschen
     )
 
     assert np.allclose(p.position, np.array([1.0, 2.0]))
