@@ -6,6 +6,15 @@ This project is a Particle Life simulation where thousands of particles move in 
 
 Even though the rules are simple, the movement of many particles at the same time creates complex and interesting patterns. The goal of this project is to simulate this behavior, make it visible, and keep the performance high enough so that the simulation runs smoothly with many particles.
 
+
+### Controls (Pygame Simulation)
+
+- SPACE – Pause / Resume
+- ↑ / ↓ – Increase / decrease interaction strength
+- ← / → – Increase / decrease friction
+- ESC – Quit simulation
+  
+
 ## What This Project Includes
 
 ### 1. Simulation
