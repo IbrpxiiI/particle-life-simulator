@@ -40,4 +40,16 @@ Even though the rules are simple, the movement of many particles at the same tim
 	•	Architecture overview (diagram)
 	•	Final presentation of the project
 	•	Complete documentation at the end
+	
+
+## Optimization
+
+For the final milestone, the focus was on performance analysis and optimization
+of the simulation.
+
+- Profiling was performed to identify performance bottlenecks in the simulation loop
+- The main bottleneck was the particle interaction calculation, which scales quadratically
+- Optimizations were applied (e.g. improved algorithms and use of NumPy operations)
+- The simulation runs stably with at least 1000 particles
+- All tests pass successfully and the CI pipeline is green
 
