@@ -53,3 +53,14 @@ of the simulation.
 - The simulation runs stably with at least 1000 particles
 - All tests pass successfully and the CI pipeline is green
 - Coverage (pytest-cov): TOTAL 60%
+
+## Controls (Pygame Simulation)
+
+The simulation can be controlled using the keyboard while the Pygame window is focused.
+
+- **SPACE** – Pause / resume the simulation
+- **↑ / ↓ (Arrow Up / Down)** – Increase / decrease global interaction strength
+- **← / → (Arrow Left / Right)** – Increase / decrease friction
+- **ESC** – Quit the simulation
+
+
