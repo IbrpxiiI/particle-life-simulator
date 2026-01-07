@@ -18,7 +18,7 @@ Even though the rules are simple, the movement of many particles at the same tim
 ### 2. Code Quality
 	•	Clean and readable code
 	•	Docstrings in important classes and functions
-	•	Unit tests (about 70% coverage)
+	•	Unit tests 
 	•	GitHub Actions pipeline (automatic tests, linting, formatting)
 
 ### 3. Performance
@@ -53,3 +53,4 @@ of the simulation.
 - The simulation runs stably with at least 1000 particles
 - All tests pass successfully and the CI pipeline is green
 
+Coverage (pytest-cov): TOTAL 60%
