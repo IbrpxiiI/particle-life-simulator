@@ -52,5 +52,4 @@ of the simulation.
 - Optimizations were applied (e.g. improved algorithms and use of NumPy operations)
 - The simulation runs stably with at least 1000 particles
 - All tests pass successfully and the CI pipeline is green
-
-Coverage (pytest-cov): TOTAL 60%
+- Coverage (pytest-cov): TOTAL 60%
