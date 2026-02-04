@@ -1,6 +1,7 @@
 # src/interaction_rules.py
 
 import numpy as np
+import math
 
 
 class InteractionRules:
@@ -46,11 +47,13 @@ class InteractionRules:
 
         Rückgabe: ndarray der Form (N, 2)
         """
+
         positions = system.get_positions()
         types = system.get_types()
         n = len(positions)
 
-        forces = np.zeros((n, 2), dtype=float)
+        # Ergebnisarray für alle Kräfte
+        forces = np.zeros((n, 2), dtype=np.float32)
 
         if n == 0:
             return forces
@@ -59,41 +62,78 @@ class InteractionRules:
         if types.min() < 0 or types.max() >= self.num_types():
             raise ValueError("Partikeltypen außerhalb des zulässigen Bereichs.")
 
-        for i in range(n):
-            for j in range(i + 1, n):
-                dx = positions[j] - positions[i]
-                dist = np.linalg.norm(dx)
+        # Lokale Kopien (schnellerer Zugriff in Schleifen)
+        matrix = self.matrix
+        min_range = self.min_range
+        max_range = self.max_range
+        global_strength = self.global_strength
 
-                # Keine Kraft wenn zu weit weg oder exakt gleiche Position
-                if dist == 0.0 or dist > self.max_range:
+        min_range_sq = min_range * min_range
+        max_range_sq = max_range * max_range
+        inv_min_range = 1.0 / min_range
+        inv_range = 1.0 / (max_range - min_range)
+
+        epsilon = 1e-12  # Schutz vor Division durch 0
+
+        for i in range(n):
+            xi, yi = positions[i]
+            ti = types[i]
+
+            for j in range(i + 1, n):
+                dx = positions[j][0] - xi
+                dy = positions[j][1] - yi
+                dist_sq = dx * dx + dy * dy
+
+                # Keine Kraft bei identischer Position oder zu großer Distanz
+                if dist_sq < epsilon or dist_sq > max_range_sq:
                     continue
 
-                direction = dx / dist
-                ti = types[i]
+                dist = math.sqrt(dist_sq)
+
+                # Richtungsvektor (Einheitsvektor)
+                inv_dist = 1.0 / dist
+                direction_x = dx * inv_dist
+                direction_y = dy * inv_dist
+
                 tj = types[j]
 
-                strength_ij = self.matrix[ti, tj]
-                strength_ji = self.matrix[tj, ti]
+                strength_ij = matrix[ti, tj]
+                strength_ji = matrix[tj, ti]
 
-                # zwei Zonen:
-                # 1. sehr nahe → starke Abstoßung
+                # Zwei Zonen:
+                # 1. sehr nahe → starke Abstoßung (verhindert Überschneidungen)
                 # 2. normaler Bereich → Matrix-Interaktion
-                if dist < self.min_range:
-                    core_factor = (self.min_range - dist) / self.min_range
-                    f_i = -core_factor * direction * self.global_strength
-                    f_j = core_factor * direction * self.global_strength
-                else:
-                    # linear abfallende Stärke
-                    factor = 1.0 - (dist - self.min_range) / (
-                        self.max_range - self.min_range
-                    )
-                    f_i = strength_ij * factor * direction * self.global_strength
-                    f_j = -strength_ji * factor * direction * self.global_strength
+                if dist_sq < min_range_sq:
+                    core_factor = (min_range - dist) * inv_min_range
 
-                forces[i] += f_i
-                forces[j] += f_j
+                    # Abstoßung ist symmetrisch: i bekommt -f, j bekommt +f
+                    fx = -core_factor * direction_x * global_strength
+                    fy = -core_factor * direction_y * global_strength
+
+                    forces[i][0] += fx
+                    forces[i][1] += fy
+                    forces[j][0] -= fx
+                    forces[j][1] -= fy
+                else:
+                    # Linear abfallende Stärke zwischen min_range und max_range
+                    factor = 1.0 - (dist - min_range) * inv_range
+
+                    # i wird von j beeinflusst (strength_ij)
+                    fx_i = strength_ij * factor * direction_x * global_strength
+                    fy_i = strength_ij * factor * direction_y * global_strength
+
+                    # j wird von i beeinflusst (strength_ji)
+                    fx_j = -strength_ji * factor * direction_x * global_strength
+                    fy_j = -strength_ji * factor * direction_y * global_strength
+
+                    forces[i][0] += fx_i
+                    forces[i][1] += fy_i
+                    forces[j][0] += fx_j
+                    forces[j][1] += fy_j
 
         return forces
+        
+
 
 
 def default_rules(num_types=4):
@@ -115,3 +155,4 @@ def default_rules(num_types=4):
         np.fill_diagonal(matrix, 0.5)
 
     return InteractionRules(matrix)
+
