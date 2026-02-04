@@ -18,35 +18,56 @@ Even though the rules are simple, the movement of many particles at the same tim
 ## What This Project Includes
 
 ### 1. Simulation
-	•	Particle class with position, velocity, and type
-	•	Simulation loop that updates movement and applies interaction forces
-	•	Interaction matrix for attraction and repulsion
-	•	Adjustable parameters (interaction strength, friction, radius, etc.)
-	•	Optional real-time visualization or video output
+	- 	Particle class with position, velocity, and type
+	- 	Simulation loop that updates movement and applies interaction forces
+	-	Interaction matrix for attraction and repulsion
+	-	Adjustable parameters (interaction strength, friction, radius, etc.)
+	-	Optional real-time visualization or video output
 
 ### 2. Code Quality
-	•	Clean and readable code
-	•	Docstrings in important classes and functions
-	•	Unit tests (about 70% coverage)
-	•	GitHub Actions pipeline (automatic tests, linting, formatting)
+	-	Clean and readable code
+	-	Docstrings in important classes and functions
+	-	Unit tests (about 70% coverage)
+	-	GitHub Actions pipeline (automatic tests, linting, formatting)
 
 ### 3. Performance
-	•	Profiling to find performance issues
-	•	Optimization using:
-	•	NumPy
-	•	better algorithms
-	•	optional numba or parallelization
-	•	Target: at least 1000–2000 particles running smoothly
+	-	Profiling to find performance issues
+	-	Optimization using:
+	-	NumPy
+	-	better algorithms
+	-	optional numba or parallelization
+	-	Target: at least 1000–2000 particles running smoothly
 
 ### 4. Project Management
-	•	GitHub repository with Issues and Kanban board
-	•	Development through branches and pull requests
-	•	Code reviews inside the team
-	•	Regular weekly updates during the project
+	-	GitHub repository with Issues and Kanban board
+	-	Development through branches and pull requests
+	-	Code reviews inside the team
+	-	Regular weekly updates during the project
 
 ### 5. Documentation & Presentation
-	•	README for users and developers
-	•	Architecture overview (diagram)
-	•	Final presentation of the project
-	•	Complete documentation at the end
+	-	README for users and developers
+	-	Architecture overview (diagram)
+	-	Final presentation of the project
+	-	Complete documentation at the end
+
+---
+
+## Requirements
+ 	-   Python 3.10 or newer
+	-   pip
+	-   Git (optional, for cloning the repository)
+
+---
+
+## Installation
+	- Clone the repository:
+		git clone https://github.com/lbrpxiii/particle-life-simulator.git
+		cd particle-life-simulator
+
+
+	- Create and activate a virtual environment
+		python3 -m venv .venv
+		source .venv/bin/activate
+
+	
 
