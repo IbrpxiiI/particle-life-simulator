@@ -132,8 +132,6 @@ class InteractionRules:
                     forces[j][1] += fy_j
 
         return forces
-        
-
 
 
 def default_rules(num_types=4):
@@ -155,4 +153,3 @@ def default_rules(num_types=4):
         np.fill_diagonal(matrix, 0.5)
 
     return InteractionRules(matrix)
-
