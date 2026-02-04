@@ -6,14 +6,7 @@ This project is a Particle Life simulation where thousands of particles move in 
 
 Even though the rules are simple, the movement of many particles at the same time creates complex and interesting patterns. The goal of this project is to simulate this behavior, make it visible, and keep the performance high enough so that the simulation runs smoothly with many particles.
 
-
-### Controls (Pygame Simulation)
-
-- SPACE – Pause / Resume
-- ↑ / ↓ – Increase / decrease interaction strength
-- ← / → – Increase / decrease friction
-- ESC – Quit simulation
-  
+---
 
 ## What This Project Includes
 
@@ -53,21 +46,59 @@ Even though the rules are simple, the movement of many particles at the same tim
 ---
 
 ## Requirements
- 	-   Python 3.10 or newer
-	-   pip
-	-   Git (optional, for cloning the repository)
+-   Python 3.10 or newer
+-   pip
+- 	Git (optional, for cloning the repository)
 
 ---
 
 ## Installation
-	- Clone the repository:
-		git clone https://github.com/lbrpxiii/particle-life-simulator.git
-		cd particle-life-simulator
+-	Clone the repository:
+  	git clone https://github.com/lbrpxiii/particle-life-simulator.git
+	cd particle-life-simulator
 
+-	Create and activate a virtual environment
+	python3 -m venv .venv
+	source .venv/bin/activate
 
-	- Create and activate a virtual environment
-		python3 -m venv .venv
-		source .venv/bin/activate
+-	Install dependencies:
+	pip install -r requirements.txt
+
+---
+
+## Run the Simulation
+-	python3 -m src.simulation_controller
+
+ ### Controls (Pygame Simulation)
+
+- SPACE – Pause / Resume
+- ↑ / ↓ – Increase / decrease interaction strength
+- ← / → – Increase / decrease friction
+- ESC – Quit simulation 
+
+---
+
+## Run tests
+-	pytest
+
+---
+
+## Format Code (Black)
+-	black src tests
+
+---
+
+## Performance & Profiling
+
+Profiling was used to identify performance bottlenecks in the simulation.
+The main hotspot is the force computation between particles.
+
+Optimizations include:
+	•	reducing unnecessary calculations
+	•	improving algorithmic structure
+	•	careful parameter tuning (interaction strength vs. friction)
+
+The goal is to maintain interactive frame rates even with a large number of particles.
 
 	
 
