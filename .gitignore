@@ -1,4 +1,17 @@
+# Python
 __pycache__/
-.pytest_cache/
 *.pyc
+
+# Testing
+.pytest_cache/
+
+# IDE
 .vscode/
+
+# Virtual environments
+.venv/
+
+
+
+
+
