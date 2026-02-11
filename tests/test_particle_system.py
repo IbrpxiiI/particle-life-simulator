@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-from src.particle import Particle
-from src.particle_system import ParticleSystem
+from particle import Particle
+from particle_system import ParticleSystem
 
 
 def make_particle(x=0.0, y=0.0, vx=0.0, vy=0.0, t=0, mass=1.0):

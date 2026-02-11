@@ -1,8 +1,8 @@
 import numpy as np
 
-from src.interaction_rules import default_rules
-from src.particle import Particle
-from src.particle_system import ParticleSystem
+from interaction_rules import default_rules
+from particle import Particle
+from particle_system import ParticleSystem
 
 
 def make_particle(x, y, t):

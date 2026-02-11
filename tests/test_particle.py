@@ -1,4 +1,4 @@
-from src.particle import Particle
+from particle import Particle
 
 
 def test_particle_initialization():
