@@ -6,7 +6,7 @@ from collections import deque
 
 import numpy as np
 import pygame
-from  particle_system import ParticleSystem
+from particle_system import ParticleSystem
 
 Color = Tuple[int, int, int]
 
