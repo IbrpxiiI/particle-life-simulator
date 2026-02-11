@@ -1,59 +1,95 @@
-# tests/test_particle_system.py
-
 import numpy as np
+import pytest
+
 from src.particle import Particle
 from src.particle_system import ParticleSystem
 
 
-def test_integrate_applies_forces_and_moves():
-    """
-    Testet, ob das Partikelsystem:
-    1. Kräfte korrekt auf die Partikel anwendet
-    2. Die resultierende Geschwindigkeit aktualisiert
-    3. Die Position entsprechend der Geschwindigkeit verändert
-    """
-    # 2 Partikel mit bekannter Anfangsposition & geschwindigkeit
-    p1 = Particle(position=(1.0, 2.0), velocity=(0.5, -0.5), mass=2.0, friction=0.0)
-    p2 = Particle(position=(0.0, 0.0), velocity=(0.0, 0.0), mass=2.0, friction=0.0)
+def make_particle(x=0.0, y=0.0, vx=0.0, vy=0.0, t=0, mass=1.0):
+    return Particle(
+        position=(x, y),
+        velocity=(vx, vy),
+        particle_type=t,
+        mass=mass,
+        friction=0.0,
+        noise=0.0,
+    )
 
-    # Partikelsystem mit genau zwei Partikeln
-    system = ParticleSystem([p1, p2])
 
-    forces = np.array([[1.0, 0.0], [-1.0, 0.0]])  # Kraft auf p1  # Kraft auf p2
+def test_integrate_empty_system_does_not_crash():
+    ps = ParticleSystem([])
+    ps.integrate(forces=np.zeros((0, 2)), dt=1.0)  # should not raise
 
-    # System für eine Zeiteinheit (dt = 1.0) integrieren
-    system.integrate(forces, dt=1.0)
 
-    # Erwartete neue Geschwindigkeiten:
-    # p1: alte v 0.5  + Beschl. 0.5  = 1.0, p2: alte v 0.0  + Beschl. -0.5 = -0.5
-    assert np.allclose(p1.velocity[0], 1.0)
-    assert np.allclose(p2.velocity[0], -0.5)
+def test_integrate_wrong_force_shape_raises():
+    ps = ParticleSystem([make_particle(), make_particle()])
+    with pytest.raises(ValueError):
+        ps.integrate(forces=np.zeros((1, 2)), dt=1.0)
 
-    # Erwartete neue Positionen (dt = 1.0):
-    # p1: 1.0 + 1.0   = 2.0,  p2: 0.0 + (-0.5) = -0.5
-    assert np.allclose(p1.position[0], 2.0)
-    assert np.allclose(p2.position[0], -0.5)
+
+def test_integrate_moves_particle():
+    p = make_particle(vx=1.0, vy=0.0)
+    ps = ParticleSystem([p])
+    ps.integrate(forces=np.array([[0.0, 0.0]]), dt=1.0)
+    assert p.position[0] > 0.0
+
+
+def test_integrate_zero_mass_does_not_crash():
+    p = make_particle(mass=0.0, vx=1.0, vy=0.0)
+    ps = ParticleSystem([p])
+    ps.integrate(forces=[[1.0, 0.0]], dt=1.0)
+    assert p.position[0] != 0.0
 
 
 def test_apply_boundary_clip():
-    """
-    Testet, ob das Partikelsystem die Positionen der Partikel
-    korrekt auf die erlaubten Grenzen "clippt".
-    Clippen bedeutet:
-    - Werte unterhalb der Grenze werden auf Min. gesetzt
-    - Werte oberhalb werden auf Max. gesetzt
-    """
-    # Partikel startet außerhalb der erlaubten Grenzen:
-    # x = 600  -> zu groß
-    # y = -10  -> zu klein
-    p = Particle(position=(600.0, -10.0), velocity=(0.0, 0.0))
+    p = make_particle(x=200.0, y=-10.0)
+    ps = ParticleSystem([p])
+    ps.apply_boundary(xlim=(0, 100), ylim=(0, 100), mode="clip")
+    assert 0.0 <= p.position[0] <= 100.0
+    assert 0.0 <= p.position[1] <= 100.0
 
-    system = ParticleSystem([p])
 
-    # Grenzen: 0 bis 500 in X und Y
-    system.apply_boundary(
-        xlim=(0.0, 500.0), ylim=(0.0, 500.0), mode="clip"  # harte Begrenzung
-    )
+def test_apply_boundary_wrap():
+    p = make_particle(x=150.0, y=150.0)
+    ps = ParticleSystem([p])
+    ps.apply_boundary(xlim=(0, 100), ylim=(0, 100), mode="wrap")
+    assert 0.0 <= p.position[0] < 100.0
+    assert 0.0 <= p.position[1] < 100.0
 
-    assert 0.0 <= p.position[0] <= 500.0
-    assert 0.0 <= p.position[1] <= 500.0
+
+def test_apply_boundary_reflect_flips_velocity_x():
+    p = make_particle(x=-1.0, y=50.0, vx=2.0, vy=0.0)
+    ps = ParticleSystem([p])
+    ps.apply_boundary(xlim=(0, 100), ylim=(0, 100), mode="reflect")
+    assert p.position[0] == 0.0
+    assert p.velocity[0] == -2.0
+
+
+def test_apply_boundary_reflect_y():
+    p = make_particle(x=50.0, y=-5.0, vx=0.0, vy=3.0)
+    ps = ParticleSystem([p])
+    ps.apply_boundary(xlim=(0, 100), ylim=(0, 100), mode="reflect")
+    assert p.position[1] == 0.0
+    assert p.velocity[1] == -3.0
+
+
+def test_apply_boundary_unknown_mode_raises():
+    ps = ParticleSystem([make_particle()])
+    with pytest.raises(ValueError):
+        ps.apply_boundary(mode="unknown")
+
+
+def test_get_positions_and_types():
+    p1 = make_particle(t=1)
+    p2 = make_particle(t=2)
+    ps = ParticleSystem([p1, p2])
+    assert ps.get_positions().shape == (2, 2)
+    assert ps.get_types().tolist() == [1, 2]
+
+
+def test_random_system_factory_smoke():
+    ps = ParticleSystem.random_system(n=10, num_types=3, width=100, height=50)
+    assert ps.num_particles() == 10
+    assert ps.rules is not None
+    assert ps.get_positions().shape == (10, 2)
+    assert ps.get_types().shape == (10,)

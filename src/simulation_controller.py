@@ -110,7 +110,8 @@ class SimulationController:
             self.step_simulation(dt)
 
             fps = self.renderer.get_fps()
-            self.renderer.render(fps=fps)
+            fps_avg = self.renderer.get_fps_avg()
+            self.renderer.render(fps=fps, fps_avg=fps_avg)
 
             step += 1
 

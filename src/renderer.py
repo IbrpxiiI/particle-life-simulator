@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 from typing import Dict, Tuple, Optional
+from collections import deque
 
 import numpy as np
 import pygame
@@ -36,11 +37,7 @@ class ConsoleRenderer:
 class PygameRenderer:
     """
     Real-time visualization using pygame.
-
-    Responsibilities:
-    - open a window
-    - draw all particles as colored circles
-    - optionally show FPS counter
+    Shows current FPS and rolling average FPS.
     """
 
     def __init__(
@@ -52,6 +49,7 @@ class PygameRenderer:
         particle_radius: int = 3,
         show_fps: bool = True,
         color_map: Optional[Dict[int, Color]] = None,
+        fps_avg_window: int = 30,
     ):
         self.system = system
         self.width = int(width)
@@ -67,81 +65,103 @@ class PygameRenderer:
         self.clock = pygame.time.Clock()
         self.font = pygame.font.SysFont("consolas", 16)
 
+        self.fps_samples = deque(maxlen=int(fps_avg_window))
+        self.fps_avg = 0.0
+
         if color_map is None:
             self.color_map = self._create_default_color_map()
         else:
             self.color_map = color_map
 
-    # ------------------------------------------------------------------
+        self._radius = self.particle_radius
+
+        self.particle_surfaces: Dict[int, pygame.Surface] = {}
+        for t, color in self.color_map.items():
+            surf = pygame.Surface(
+                (2 * self._radius + 1, 2 * self._radius + 1),
+                pygame.SRCALPHA,
+            )
+            pygame.draw.circle(surf, color, (self._radius, self._radius), self._radius)
+            self.particle_surfaces[int(t)] = surf
+
+        default_color = (200, 200, 200)
+        self.default_surface = pygame.Surface(
+            (2 * self._radius + 1, 2 * self._radius + 1),
+            pygame.SRCALPHA,
+        )
+        pygame.draw.circle(
+            self.default_surface,
+            default_color,
+            (self._radius, self._radius),
+            self._radius,
+        )
+
     def _create_default_color_map(self) -> Dict[int, Color]:
-        """
-        Default mapping: type -> RGB color.
-        """
         return {
-            0: (255, 80, 80),  # red-ish
-            1: (80, 255, 80),  # green-ish
-            2: (80, 80, 255),  # blue-ish
-            3: (255, 255, 80),  # yellow-ish
+            0: (255, 80, 80),
+            1: (80, 255, 80),
+            2: (80, 80, 255),
+            3: (255, 255, 80),
         }
 
     def type_to_color(self, particle_type: int) -> Color:
-        """Returns a color for a given particle type."""
         return self.color_map.get(int(particle_type), (200, 200, 200))
 
-    # ------------------------------------------------------------------
     def clear(self) -> None:
-        """Fill the screen with the background color."""
         self.screen.fill(self.background_color)
 
     def draw_particles(self) -> None:
-        """
-        Draw all particles as circles.
-        Uses positions and types from the ParticleSystem.
-        """
         positions = self.system.get_positions()
         types = self.system.get_types()
+        positions = np.atleast_2d(positions)
 
-        positions = np.atleast_2d(
-            positions
-        )  # sicherstellen, dass pos[0]/pos[1] funktioniert
-
+        r = self._radius
         for pos, t in zip(positions, types):
             x = int(pos[0])
             y = int(pos[1])
-            color = self.type_to_color(int(t))
-            pygame.draw.circle(self.screen, color, (x, y), self.particle_radius)
+            surf = self.particle_surfaces.get(int(t), self.default_surface)
+            self.screen.blit(surf, (x - r, y - r))
 
-    def draw_overlay(self, fps: Optional[float] = None) -> None:
-        """Draw optional FPS text."""
-        if not self.show_fps or fps is None:
+    def draw_overlay(
+        self,
+        fps: Optional[float] = None,
+        fps_avg: Optional[float] = None,
+    ) -> None:
+        if not self.show_fps:
             return
 
-        text_surface = self.font.render(f"FPS: {fps:.1f}", True, (255, 255, 255))
+        if fps is None:
+            fps = self.get_fps()
+
+        if fps_avg is None:
+            fps_avg = self.get_fps_avg()
+
+        text = f"FPS: {fps:.1f} | avg: {fps_avg:.1f}"
+        text_surface = self.font.render(text, True, (255, 255, 255))
         self.screen.blit(text_surface, (10, 10))
 
-    # ------------------------------------------------------------------
-    def render(self, fps: Optional[float] = None) -> None:
-        """
-        Full draw step:
-        - clear screen
-        - draw particles
-        - draw overlay (FPS)
-        - flip buffers
-        """
+    def render(
+        self,
+        fps: Optional[float] = None,
+        fps_avg: Optional[float] = None,
+    ) -> None:
         self.clear()
         self.draw_particles()
-        self.draw_overlay(fps=fps)
+        self.draw_overlay(fps=fps, fps_avg=fps_avg)
         pygame.display.flip()
 
-    # ------------------------------------------------------------------
     def tick(self, target_fps: int = 60) -> float:
-        """
-        Limit to target FPS and return dt in seconds.
-        """
         ms = self.clock.tick(target_fps)
-        dt = ms / 1000.0
-        return dt
+
+        fps_now = float(self.clock.get_fps())
+        self.fps_samples.append(fps_now)
+        if self.fps_samples:
+            self.fps_avg = sum(self.fps_samples) / len(self.fps_samples)
+
+        return ms / 1000.0
 
     def get_fps(self) -> float:
-        """Current FPS measured by pygame."""
         return float(self.clock.get_fps())
+
+    def get_fps_avg(self) -> float:
+        return float(self.fps_avg)
