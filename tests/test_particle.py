@@ -1,4 +1,6 @@
 from src.particle import Particle
+
+
 def test_particle_initialization():
     p = Particle(position=(1.0, 2.0), velocity=(0.5, -0.5), particle_type=1)
     assert p.position[0] == 1.0

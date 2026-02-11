@@ -34,7 +34,6 @@ def test_compute_forces_symmetric_particles():
     rules = default_rules(num_types=1)
     forces = rules.compute_forces(ps)
 
-   
     assert np.allclose(forces[0], -forces[1])
 
 
