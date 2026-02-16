@@ -29,6 +29,7 @@ class ParticleSystem:
         self.particles: List[Particle] = list(particles) if particles else []
         self.rules = rules
 
+    @classmethod
     def random_system(cls, n=200, num_types=4, width=800, height=600):
         rng = np.random.default_rng()
 
@@ -80,7 +81,6 @@ class ParticleSystem:
         for p, v in zip(self.particles, velocities):
             p.velocity = v
             p.integrate(dt)
-
     
     # Optimierte Randverarbeitung
     def apply_boundary(
@@ -131,7 +131,6 @@ class ParticleSystem:
 
             positions[:, 0] = np.clip(positions[:, 0], xmin, xmax)
             positions[:, 1] = np.clip(positions[:, 1], ymin, ymax)
-
 
         else:
             raise ValueError("Unbekannter Modus: clip, wrap oder reflect")
