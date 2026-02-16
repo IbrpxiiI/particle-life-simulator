@@ -80,6 +80,8 @@ Even though the rules are simple, the movement of many particles at the same tim
 
 ## Run tests
 -	pytest
+-	mit Coverage:
+	• python -m pytest --cov=src --cov-report=term-missing
 
 ---
 
