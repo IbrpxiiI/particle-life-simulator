@@ -1,6 +1,6 @@
-from particle import Particle
-from particle_system import ParticleSystem
-from renderer import ConsoleRenderer, PygameRenderer
+from src.particle import Particle
+from src.particle_system import ParticleSystem
+from src.renderer import ConsoleRenderer, PygameRenderer
 
 
 def create_small_system():
