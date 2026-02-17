@@ -6,10 +6,10 @@ from typing import List, Tuple
 import numpy as np
 import pygame
 
-from particle import Particle
-from particle_system import ParticleSystem
-from interaction_rules import InteractionRules, default_rules
-from renderer import PygameRenderer, ConsoleRenderer
+from .particle import Particle
+from .particle_system import ParticleSystem
+from .interaction_rules import InteractionRules, default_rules
+from .renderer import PygameRenderer, ConsoleRenderer
 
 
 class SimulationController:
