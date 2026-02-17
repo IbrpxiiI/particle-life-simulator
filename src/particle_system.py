@@ -12,8 +12,8 @@ ParticleSystem-Klasse für den Particle Life Simulator
 from __future__ import annotations
 from typing import List, Tuple, Optional
 import numpy as np
-from particle import Particle
-from interaction_rules import default_rules
+from .particle import Particle
+from .interaction_rules import default_rules
 
 
 class ParticleSystem:
