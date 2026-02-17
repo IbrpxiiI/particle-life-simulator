@@ -2,11 +2,11 @@
 """
 ParticleSystem-Klasse für den Particle Life Simulator
 
-Verantwortung von Person A (Paiman):
 - Verwaltung einer Partikelliste
 - Integration aller Partikel
 - Anwendung von Randbedingungen
 - Schnittstellen für Renderer
+- Vorbereitung für >= Partikel
 """
 
 from __future__ import annotations
@@ -31,45 +31,21 @@ class ParticleSystem:
 
     @classmethod
     def random_system(cls, n=200, num_types=4, width=800, height=600):
-        """
-        Erzeugt ein zufälliges Partikelsystem.
-
-        Parameter:
-        n : Anzahl der Partikel
-        num_types : Anzahl der Partikeltypen
-        width, height : Größe des Simulationsfelds
-        """
         rng = np.random.default_rng()
-        particles = []
 
-        for _ in range(n):
-            x = rng.uniform(0, width)
-            y = rng.uniform(0, height)
-            vx = rng.uniform(-1, 1)
-            vy = rng.uniform(-1, 1)
-            t = rng.integers(0, num_types)
+        # Positionen, v & Typen erzeugen
+        positions = rng.uniform([0, 0], [width, height], size=(n, 2))
+        velocities = rng.uniform(-1, 1, size=(n, 2))
+        types = rng.integers(0, num_types, size=n)
 
-            # Position & Velocity als Tupel übergeben, Typ korrekt
-            particles.append(
-                Particle(position=(x, y), velocity=(vx, vy), particle_type=int(t))
-            )
+        particles = [
+            Particle(tuple(pos), tuple(vel), int(t))
+            for pos, vel, t in zip(positions, velocities, types)
+        ]
 
-        # Regeln erzeugen (Standard)
-        rules = default_rules(num_types)
+        return cls(particles, default_rules(num_types))
 
-        return cls(particles, rules)
-
-    def add_particle(self, p: Particle) -> None:
-        """
-        Fügt 1 einzelnes Partikel zur Systemliste hinzu
-        """
-        self.particles.append(p)
-
-    def num_particles(self) -> int:
-        """
-        Gibt Anzahl der Partikel zurück
-        """
-        return len(self.particles)
+    # Kern: Optimierte Integration
 
     def integrate(self, forces, dt: float = 1.0) -> None:
         """
@@ -81,26 +57,32 @@ class ParticleSystem:
         4. Jedes Partikel führt sein eigenes integrate(dt) aus
            -> beinhaltet: Reibung, Noise & Positionsänderung
         """
-        if len(self.particles) == 0:
+        if not self.particles:
             return
 
         # Kräfte in ndarray umwandeln
         forces_arr = np.asarray(forces, dtype=float)
-        if forces_arr.shape != (len(self.particles), 2):
-            raise ValueError(
-                "forces must be shape (N,2) where N == number of particles"
-            )
+        n = len(self.particles)
 
-        # 1. Physikschritt: Beschleunigung -> Geschwindigkeit
-        for i, p in enumerate(self.particles):
-            fx, fy = forces_arr[i]
-            accel = np.array([fx, fy], dtype=float) / (p.mass if p.mass != 0 else 1.0)
-            p.velocity += accel * dt
+        if forces_arr.shape != (n, 2):
+            raise ValueError("forces müssen die Form (N,2) haben")
 
-        # 2. Jeder Partikel integriert sich selbst
-        for p in self.particles:
+        # Aktuelle v & Massen sammeln
+        velocities = np.array([p.velocity for p in self.particles])
+        masses = np.array([p.mass if p.mass != 0 else 1.0 for p in self.particles])
+
+        # Beschleunigung berechnen (F = m * a)
+        accelerations = forces / masses[:, None]
+
+        # Geschwindigkeit aktualisieren
+        velocities += accelerations * dt
+
+        # Ergebnisse zurück in die Partikel schreiben
+        for p, v in zip(self.particles, velocities):
+            p.velocity = v
             p.integrate(dt)
-
+    
+    # Optimierte Randverarbeitung
     def apply_boundary(
         self,
         xlim: Tuple[float, float] = (0.0, 500.0),
@@ -119,43 +101,45 @@ class ParticleSystem:
         - muss die Position verändert werden?
         - muss Velocity geändert werden?
         """
-        xmin, xmax = float(xlim[0]), float(xlim[1])
-        ymin, ymax = float(ylim[0]), float(ylim[1])
+        if not self.particles:
+            return
 
-        for p in self.particles:
-            if mode == "clip":
-                # Position wird auf erlaubten Grenzen begrenzt
-                p.position[0] = np.clip(p.position[0], xmin, xmax)
-                p.position[1] = np.clip(p.position[1], ymin, ymax)
+        xmin, xmax = xlim
+        ymin, ymax = ylim
 
-            elif mode == "wrap":
-                # z.B. l Rand raus -> r Rand rein
-                width = xmax - xmin
-                height = ymax - ymin
-                p.position[0] = xmin + ((p.position[0] - xmin) % width)
-                p.position[1] = ymin + ((p.position[1] - ymin) % height)
+        # Positionen & V gesammelt
+        positions = np.array([p.position for p in self.particles])
+        velocities = np.array([p.velocity for p in self.particles])
 
-            elif mode == "reflect":
-                # X-Richtung prüfen
-                if p.position[0] < xmin:
-                    p.position[0] = xmin
-                    p.velocity[0] = -p.velocity[0]
-                elif p.position[0] > xmax:
-                    p.position[0] = xmax
-                    p.velocity[0] = -p.velocity[0]
-                # Y-Richtung prüfen
-                if p.position[1] < ymin:
-                    p.position[1] = ymin
-                    p.velocity[1] = -p.velocity[1]
-                elif p.position[1] > ymax:
-                    p.position[1] = ymax
-                    p.velocity[1] = -p.velocity[1]
+        if mode == "clip":
+            positions[:, 0] = np.clip(positions[:, 0], xmin, xmax)
+            positions[:, 1] = np.clip(positions[:, 1], ymin, ymax)
 
-            else:
-                raise ValueError(
-                    "Unknown boundary mode: choose 'clip', 'wrap', or 'reflect'"
-                )
+        elif mode == "wrap":
+            width = xmax - xmin
+            height = ymax - ymin
+            positions[:, 0] = xmin + (positions[:, 0] - xmin) % width
+            positions[:, 1] = ymin + (positions[:, 1] - ymin) % height
 
+        elif mode == "reflect":
+            # Masken für Kollisionen
+            mask_x = (positions[:, 0] < xmin) | (positions[:, 0] > xmax)
+            mask_y = (positions[:, 1] < ymin) | (positions[:, 1] > ymax)
+
+            velocities[mask_x, 0] *= -1
+            velocities[mask_y, 1] *= -1
+
+            positions[:, 0] = np.clip(positions[:, 0], xmin, xmax)
+            positions[:, 1] = np.clip(positions[:, 1], ymin, ymax)
+
+        else:
+            raise ValueError("Unbekannter Modus: clip, wrap oder reflect")
+
+        # Ergebnisse zurückschreiben
+        for p, pos, vel in zip(self.particles, positions, velocities):
+            p.position = pos
+            p.velocity = vel
+            
     # Getter für Renderer
     def get_positions(self) -> np.ndarray:
         """
