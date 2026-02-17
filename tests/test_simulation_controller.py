@@ -7,9 +7,9 @@ import numpy as np
 import pygame
 import pytest
 
-from particle import Particle
-from particle_system import ParticleSystem
-from simulation_controller import SimulationController
+from src.particle import Particle
+from src.particle_system import ParticleSystem
+from src.simulation_controller import SimulationController
 
 
 class DummyRules:
