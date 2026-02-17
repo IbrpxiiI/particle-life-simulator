@@ -152,3 +152,7 @@ class ParticleSystem:
         Gibt die Partikeltypen aller Partikel zurück
         """
         return np.array([p.type for p in self.particles], dtype=int)
+
+    def num_particles(self) -> int:
+        """Gibt die Anzahl der Partikel zurück."""
+        return len(self.particles)
