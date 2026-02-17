@@ -53,16 +53,16 @@ Even though the rules are simple, the movement of many particles at the same tim
 ---
 
 ## Installation
--	Clone the repository:
-  	git clone https://github.com/lbrpxiii/particle-life-simulator.git
-	cd particle-life-simulator
+-	Clone the repository and go to path:
+  	- git clone https://github.com/lbrpxiii/particle-life-simulator.git
+	- cd particle-life-simulator
 
 -	Create and activate a virtual environment
 	- python3 -m venv .venv
 	- source .venv/bin/activate
 
 -	Install dependencies:
-	pip install -r requirements.txt
+	- pip install -r requirements.txt
 
 ---
 
