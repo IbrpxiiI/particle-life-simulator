@@ -81,7 +81,7 @@ class ParticleSystem:
         for p, v in zip(self.particles, velocities):
             p.velocity = v
             p.integrate(dt)
-    
+
     # Optimierte Randverarbeitung
     def apply_boundary(
         self,
@@ -139,7 +139,7 @@ class ParticleSystem:
         for p, pos, vel in zip(self.particles, positions, velocities):
             p.position = pos
             p.velocity = vel
-            
+
     # Getter für Renderer
     def get_positions(self) -> np.ndarray:
         """
