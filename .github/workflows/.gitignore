@@ -17,9 +17,11 @@ coverage.xml
 # Virtual environments
 .venv/
 
-#macOS
+# macOS
 .DS_Store
 
+# Profiling
+profiling/profile.out
 
 
 
