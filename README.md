@@ -102,5 +102,29 @@ Optimizations include:
 
 The goal is to maintain interactive frame rates even with a large number of particles.
 
+___
+## Developer Dokumentation
+
+Paiman – Physik & Systemarchitektur
+	•	Implementierung der Particle-Klasse und des ParticleSystem
+	•	Integrationslogik (Kräfte → Bewegung)
+	•	Randbedingungen
+	•	Performance-Optimierung mit NumPy (≥1000 Partikel)
+	•	Tests für Partikelsystem und Boundary Handling
+
+Sabrina – Interaktionslogik & Kräfte
+	•	Implementierung der InteractionRules
+	•	Interaktionsmatrix & compute_forces()
+	•	Parametrisierung von Reichweite und Stärke
+	•	Entwicklung und Absicherung der Interaktionslogik durch Tests
+	•	Test- und CI-Stabilisierung
+	• 	Projektinfrastruktur und Dokumentation
+
+Yaman – Visualisierung & Integration
+	•	Implementierung des PygameRenderer
+	•	Echtzeitdarstellung mit farbiger Typzuordnung
+	•	FPS-Anzeige (aktuell & Durchschnitt)
+	•	Renderer-Tests und Erhöhung der Coverage (~77 %)
+
 	
 
