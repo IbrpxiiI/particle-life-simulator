@@ -43,6 +43,7 @@ Even though the rules are simple, the movement of many particles at the same tim
 ### 5. Documentation & Presentation
 	-	README for users and developers
 	-	Architecture overview (diagram)
+	    ![Architekturdiagramm](images/ProjektDiagramm.png)
 	-	Final presentation of the project
 	-	Complete documentation at the end
 
