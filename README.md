@@ -123,7 +123,7 @@ ___
 
 ## Developer documentation
 
-Paiman – Physics & System Architecture
+### Paiman – Physics & System Architecture
 - Implementation of the Particle class and the ParticleSystem
 - Integration logic (forces → motion update)
 - Boundary condition handling
@@ -132,7 +132,7 @@ Paiman – Physics & System Architecture
   
 
 
-Sabrina – Interaction Logic & Forces
+### Sabrina – Interaction Logic & Forces
 - Implementation of the InteractionRules
 - Interaction matrix & compute_forces()
 - Parameterization of interaction range and strength
@@ -142,7 +142,7 @@ Sabrina – Interaction Logic & Forces
   
 
 
-Yaman – Visualization & Integration
+### Yaman – Visualization & Integration
 - Implementation of the PygameRenderer
 - Real-time rendering with color-coded particle types
 - FPS display (current & average)
