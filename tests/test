@@ -1,8 +1,0 @@
-from src.interaction_rules import default_rules
-from src.particle_system import ParticleSystem
-
-rules = default_rules()
-system = ParticleSystem(num_particles=10, rules=rules)
-
-forces = rules.compute_forces(system)
-print(forces.shape)
