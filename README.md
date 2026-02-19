@@ -16,12 +16,15 @@ Even though the rules are simple, the movement of many particles at the same tim
 	-	Interaction matrix for attraction and repulsion
 	-	Adjustable parameters (interaction strength, friction, radius, etc.)
 	-	Optional real-time visualization or video output
+	- 	Support for large particle counts (1000+)
+	- 	Modular architecture separating physics, interaction logic, and rendering
 
 ### 2. Code Quality
 	-	Clean and readable code
 	-	Docstrings in important classes and functions
-	-	Unit tests (about 70% coverage)
-	-	GitHub Actions pipeline (automatic tests, linting, formatting)
+	-	Unit tests (about 70-80% coverage)
+	-	Continuous Integration (GitHub Actions on Linux, macOS, Windows)
+	-   Automatic formatting check using Black
 
 ### 3. Performance
 	-	Profiling to find performance issues
@@ -102,17 +105,22 @@ Note: Coverage requires the `pytest-cov` package, which is included in `requirem
 
 ## Performance & Profiling
 
-Profiling was used to identify performance bottlenecks in the simulation.
-The main hotspot is the force computation between particles.
+Performance profiling was conducted using Python’s built-in `cProfile` to identify computational bottlenecks.
 
-Optimizations include:
-- reducing unnecessary calculations
-- improving algorithmic structure
-- careful parameter tuning (interaction strength vs. friction)
+Profiling results show that over 99% of the total runtime is spent in the `compute_forces()` function. This confirms the expected O(N²) complexity of pairwise particle interactions.
 
-The goal is to maintain interactive frame rates even with a large number of particles.
+Example profiling result:
+- ~21 million distance calculations
+- ~145 seconds spent in `compute_forces`
+- negligible time in integration and boundary handling
+
+The main performance bottleneck is the repeated pairwise distance
+computation between particles.
+
+Profiling scripts and results can be found in the `profiling/` directory.
 
 ___
+
 ## Developer documentation
 
 Paiman – Physics & System Architecture
@@ -121,6 +129,7 @@ Paiman – Physics & System Architecture
 - Boundary condition handling
 - Performance optimization using NumPy (≥1000 particles)
 - Tests for the particle system and boundary handling
+  
 
 
 Sabrina – Interaction Logic & Forces
@@ -130,6 +139,7 @@ Sabrina – Interaction Logic & Forces
 - Development and validation of the interaction logic through tests
 - Test and CI stabilization
 - Project infrastructure and documentation
+  
 
 
 Yaman – Visualization & Integration
