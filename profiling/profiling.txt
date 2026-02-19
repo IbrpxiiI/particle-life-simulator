@@ -1,0 +1,40 @@
+Thu Feb 19 16:11:13 2026    profiling/profile.out
+
+         21608742 function calls (21605948 primitive calls) in 146.325 seconds
+
+   Ordered by: cumulative time
+   List reduced from 815 to 30 due to restriction <30>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    105/1    0.000    0.000  146.325  146.325 {built-in method builtins.exec}
+        1    0.000    0.000  146.325  146.325 profiling.py:1(<module>)
+        1    0.009    0.009  146.238  146.238 profiling.py:8(run_profiling)
+      200  144.914    0.725  145.718    0.729 interaction_rules.py:40(compute_forces)
+ 21161861    0.748    0.000    0.748    0.000 {built-in method math.sqrt}
+      200    0.074    0.000    0.362    0.002 particle_system.py:50(integrate)
+       10    0.000    0.000    0.222    0.022 __init__.py:1(<module>)
+   300000    0.216    0.000    0.216    0.000 particle.py:84(integrate)
+     4202    0.129    0.000    0.129    0.000 {built-in method numpy.array}
+      200    0.050    0.000    0.129    0.001 particle_system.py:86(apply_boundary)
+    133/5    0.000    0.000    0.104    0.021 <frozen importlib._bootstrap>:1165(_find_and_load)
+    133/5    0.000    0.000    0.104    0.021 <frozen importlib._bootstrap>:1120(_find_and_load_unlocked)
+    128/6    0.000    0.000    0.103    0.017 <frozen importlib._bootstrap>:666(_load_unlocked)
+    104/6    0.000    0.000    0.102    0.017 <frozen importlib._bootstrap_external>:934(exec_module)
+   327/11    0.000    0.000    0.101    0.009 <frozen importlib._bootstrap>:233(_call_with_frames_removed)
+    395/7    0.000    0.000    0.095    0.014 {built-in method builtins.__import__}
+   147/21    0.000    0.000    0.093    0.004 <frozen importlib._bootstrap>:1207(_handle_fromlist)
+        1    0.000    0.000    0.043    0.043 __config__.py:1(<module>)
+      200    0.000    0.000    0.037    0.000 particle_system.py:144(get_positions)
+      104    0.000    0.000    0.032    0.000 <frozen importlib._bootstrap_external>:1007(get_code)
+      104    0.000    0.000    0.024    0.000 <frozen importlib._bootstrap_external>:1127(get_data)
+    24/11    0.000    0.000    0.020    0.002 <frozen importlib._bootstrap_external>:1239(exec_module)
+    24/11    0.004    0.000    0.020    0.002 {built-in method _imp.exec_dynamic}
+        1    0.000    0.000    0.019    0.019 _arraypad_impl.py:1(<module>)
+      104    0.019    0.000    0.019    0.000 {method 'read' of '_io.BufferedReader' objects}
+      128    0.000    0.000    0.019    0.000 <frozen importlib._bootstrap>:566(module_from_spec)
+        1    0.000    0.000    0.019    0.019 _index_tricks_impl.py:1(<module>)
+      200    0.018    0.000    0.018    0.000 particle_system.py:72(<listcomp>)
+       24    0.000    0.000    0.017    0.001 <frozen importlib._bootstrap_external>:1231(create_module)
+       24    0.017    0.001    0.017    0.001 {built-in method _imp.create_dynamic}
+
+
