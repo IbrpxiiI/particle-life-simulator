@@ -11,7 +11,7 @@ Even though the rules are simple, the movement of many particles at the same tim
 ## What This Project Includes
 
 ### 1. Simulation
-	- 	Particle class with position, velocity, and type
+	-   Particle class with position, velocity, and type
 	- 	Simulation loop that updates movement and applies interaction forces
 	-	Interaction matrix for attraction and repulsion
 	-	Adjustable parameters (interaction strength, friction, radius, etc.)
@@ -48,18 +48,23 @@ Even though the rules are simple, the movement of many particles at the same tim
 ## Requirements
 -   Python 3.10 or newer
 -   pip
-- 	Git (optional, for cloning the repository)
+- 	Git (optional, required only for cloning the repository)
 
 ---
 
 ## Installation
--	Clone the repository and go to path:
+-	Clone the repository:
   	- git clone https://github.com/lbrpxiii/particle-life-simulator.git
 	- cd particle-life-simulator
 
 -	Create and activate a virtual environment
-	- python3 -m venv .venv
-	- source .venv/bin/activate
+	- MacOS/Linux:
+		- python3 -m venv .venv
+		- source .venv/bin/activate
+    
+	- Windows:
+		- python -m venv .venv
+		- .venv\Scripts\activate
 
 -	Install dependencies:
 	- pip install -r requirements.txt
@@ -79,9 +84,14 @@ Even though the rules are simple, the movement of many particles at the same tim
 ---
 
 ## Run tests
--	pytest
--	mit Coverage: python -m pytest --cov=src --cov-report=term-missing
-  	- dafür muss pytest-cov installiert werden
+
+- Run all tests:
+  - `pytest`
+
+- Run tests with coverage:
+  - `pytest --cov=src --cov-report=term-missing`
+
+Note: Coverage requires the `pytest-cov` package, which is included in `requirements.txt`.
 
 ---
 
@@ -96,35 +106,35 @@ Profiling was used to identify performance bottlenecks in the simulation.
 The main hotspot is the force computation between particles.
 
 Optimizations include:
-	•	reducing unnecessary calculations
-	•	improving algorithmic structure
-	•	careful parameter tuning (interaction strength vs. friction)
+- reducing unnecessary calculations
+- improving algorithmic structure
+- careful parameter tuning (interaction strength vs. friction)
 
 The goal is to maintain interactive frame rates even with a large number of particles.
 
 ___
-## Developer Dokumentation
+## Developer documentation
 
-Paiman – Physik & Systemarchitektur
-	•	Implementierung der Particle-Klasse und des ParticleSystem
-	•	Integrationslogik (Kräfte → Bewegung)
-	•	Randbedingungen
-	•	Performance-Optimierung mit NumPy (≥1000 Partikel)
-	•	Tests für Partikelsystem und Boundary Handling
+Paiman – Physics & System Architecture
+- Implementation of the Particle class and the ParticleSystem
+- Integration logic (forces → motion update)
+- Boundary condition handling
+- Performance optimization using NumPy (≥1000 particles)
+- Tests for the particle system and boundary handling
 
-Sabrina – Interaktionslogik & Kräfte
-	•	Implementierung der InteractionRules
-	•	Interaktionsmatrix & compute_forces()
-	•	Parametrisierung von Reichweite und Stärke
-	•	Entwicklung und Absicherung der Interaktionslogik durch Tests
-	•	Test- und CI-Stabilisierung
-	• 	Projektinfrastruktur und Dokumentation
 
-Yaman – Visualisierung & Integration
-	•	Implementierung des PygameRenderer
-	•	Echtzeitdarstellung mit farbiger Typzuordnung
-	•	FPS-Anzeige (aktuell & Durchschnitt)
-	•	Renderer-Tests und Erhöhung der Coverage (~77 %)
+Sabrina – Interaction Logic & Forces
+- Implementation of the InteractionRules
+- Interaction matrix & compute_forces()
+- Parameterization of interaction range and strength
+- Development and validation of the interaction logic through tests
+- Test and CI stabilization
+- Project infrastructure and documentation
 
-	
+
+Yaman – Visualization & Integration
+- Implementation of the PygameRenderer
+- Real-time rendering with color-coded particle types
+- FPS display (current & average)
+- Renderer tests and coverage improvement (~77%)
 
