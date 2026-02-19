@@ -122,6 +122,48 @@ Profiling scripts and results can be found in the `profiling/` directory.
 
 ___
 
+## Code Structure
+
+The project follows a modular architecture with clearly separated responsibilities.
+
+### Main Components
+
+- **SimulationController**  
+  Coordinates the main loop.  
+  Calls:
+  - `InteractionRules.compute_forces(system)`
+  - `ParticleSystem.integrate(forces, dt)`
+  - `ParticleSystem.apply_boundary(...)`
+  - `Renderer.render(...)`
+
+- **ParticleSystem**  
+  Manages all particles and updates their motion.  
+  Provides `get_positions()` and `get_types()` for rendering.
+
+- **InteractionRules**  
+  Stores the interaction matrix and computes pairwise forces  
+  via `compute_forces(system)` (O(N²)).
+
+- **Particle**  
+  Represents a single particle and handles local physics  
+  (`apply_force()`, `integrate(dt)`).
+
+- **Renderer**  
+  Visualizes the system state using `PygameRenderer`.  
+  Only reads data from the system and does not modify it.
+
+### Frame Workflow
+
+Each frame:
+1. Handle input  
+2. Compute forces  
+3. Integrate motion  
+4. Apply boundary conditions  
+5. Render frame  
+
+
+---
+
 ## Developer documentation
 
 ### Paiman – Physics & System Architecture
