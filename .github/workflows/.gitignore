@@ -1,4 +1,26 @@
+# Python
 __pycache__/
-.pytest_cache/
 *.pyc
+
+# Testing
+.pytest_cache/
+
+# Coverage
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# IDE
 .vscode/
+
+# Virtual environments
+.venv/
+
+#macOS
+.DS_Store
+
+
+
+
+
