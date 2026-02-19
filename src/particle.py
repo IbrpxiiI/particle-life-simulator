@@ -2,7 +2,6 @@
 """
 Particle-Klasse für den Particle Life Simulator
 
-Verantwortung von Person A (Paiman):
 - Datencontainer für ein einzelnes Partikel
 - Physikalische Parameter: Masse, Reibung, Rauschen
 - Kleine Hilfsfunktionen: Kräfte anwenden, Bewegung integrieren
